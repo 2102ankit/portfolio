@@ -48,7 +48,7 @@ export type ContactSubmission = {
 export async function getProjects() {
   try {
     // Ensure the JSON data matches the Project type
-    const projects = allProjects as Project[];
+    const projects = allProjects || [] as Project[];
     // Sort by order_index (ascending)
     return projects.sort((a, b) => a.order_index - b.order_index);
   } catch (error) {
@@ -59,7 +59,7 @@ export async function getProjects() {
 // Get featured projects
 export async function getFeaturedProjects() {
   try {
-    const projects = allProjects as Project[];
+    const projects = allProjects || [] as Project[];
     // Filter featured projects and sort by order_index
     return projects
       .filter((project) => project.featured)
@@ -72,7 +72,7 @@ export async function getFeaturedProjects() {
 // Get all blog posts
 export async function getBlogPosts() {
   try {
-    const blogPosts = allBlogs as BlogPost[];
+    const blogPosts = allBlogs || [] as BlogPost[];
     // Filter published posts and sort by published_at (descending)
     return blogPosts
       .filter((post) => post.published)
@@ -88,7 +88,7 @@ export async function getBlogPosts() {
 // Get a single blog post by slug
 export async function getBlogPostBySlug(slug: string) {
   try {
-    const blogPosts = allBlogs as BlogPost[];
+    const blogPosts = allBlogs || [] as BlogPost[];
     // Find the post with matching slug and ensure it's published
     const post = blogPosts.find((post) => post.slug === slug && post.published);
     return post || null;
