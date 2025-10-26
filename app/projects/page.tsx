@@ -1,12 +1,19 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Github, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { getProjects, type Project } from '@/lib/supabase';
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { getProjects, type Project } from "@/lib/data";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -20,7 +27,7 @@ export default function ProjectsPage() {
         const data = await getProjects();
         setProjects(data);
       } catch (error) {
-        console.error('Error loading projects:', error);
+        console.error("Error loading projects:", error);
       } finally {
         setLoading(false);
       }
@@ -40,11 +47,12 @@ export default function ProjectsPage() {
     new Set(projects.flatMap((project) => project.tags))
   ).sort();
 
-  const filteredProjects = selectedTags.length > 0
-    ? projects.filter((project) =>
-        selectedTags.every((tag) => project.tags.includes(tag))
-      )
-    : projects;
+  const filteredProjects =
+    selectedTags.length > 0
+      ? projects.filter((project) =>
+          selectedTags.every((tag) => project.tags.includes(tag))
+        )
+      : projects;
 
   const nextProject = () => {
     setCurrentIndex((prev) => (prev + 1) % projects.length);
@@ -99,7 +107,8 @@ export default function ProjectsPage() {
         >
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">Projects</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A collection of my work showcasing various technologies and problem-solving approaches
+            A collection of my work showcasing various technologies and
+            problem-solving approaches
           </p>
         </motion.div>
 
@@ -110,7 +119,9 @@ export default function ProjectsPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-20 relative"
           >
-            <h2 className="text-2xl font-bold mb-8 text-center">Featured Carousel</h2>
+            <h2 className="text-2xl font-bold mb-8 text-center">
+              Featured Carousel
+            </h2>
             <div className="relative h-[500px] flex items-center justify-center perspective-1000">
               <button
                 onClick={prevProject}
@@ -132,7 +143,8 @@ export default function ProjectsPage() {
                         key={project.id}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{
-                          opacity: Math.abs(position) > 1 ? 0.5 : isCenter ? 1 : 0.7,
+                          opacity:
+                            Math.abs(position) > 1 ? 0.5 : isCenter ? 1 : 0.7,
                           scale: isCenter ? 1 : 0.85,
                           x: position * 280,
                           rotateY: position * 15,
@@ -141,9 +153,13 @@ export default function ProjectsPage() {
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ duration: 0.5 }}
                         className="absolute w-80"
-                        style={{ transformStyle: 'preserve-3d' }}
+                        style={{ transformStyle: "preserve-3d" }}
                       >
-                        <Card className={`h-full ${isCenter ? 'border-foreground/20' : ''}`}>
+                        <Card
+                          className={`h-full ${
+                            isCenter ? "border-foreground/20" : ""
+                          }`}
+                        >
                           <div className="h-48 bg-muted/50 flex items-center justify-center text-xl font-medium border-b">
                             {project.thumbnail}
                           </div>
@@ -164,15 +180,28 @@ export default function ProjectsPage() {
                           </CardContent>
                           <CardFooter className="gap-2">
                             {project.github_url && (
-                              <Button asChild variant="outline" size="sm" className="gap-2">
-                                <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                              <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                className="gap-2"
+                              >
+                                <a
+                                  href={project.github_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
                                   <Github size={16} /> GitHub
                                 </a>
                               </Button>
                             )}
                             {project.demo_url && (
                               <Button asChild size="sm" className="gap-2">
-                                <a href={project.demo_url} target="_blank" rel="noopener noreferrer">
+                                <a
+                                  href={project.demo_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
                                   <ExternalLink size={16} /> Demo
                                 </a>
                               </Button>
@@ -205,13 +234,15 @@ export default function ProjectsPage() {
 
           {allTags.length > 0 && (
             <div className="mb-8">
-              <p className="text-sm text-muted-foreground mb-3">Filter by technology:</p>
+              <p className="text-sm text-muted-foreground mb-3">
+                Filter by technology:
+              </p>
               <div className="flex flex-wrap gap-2">
                 {allTags.map((tag) => (
                   <Badge
                     key={tag}
-                    variant={selectedTags.includes(tag) ? 'default' : 'outline'}
-                    className="cursor-pointer hover:border-foreground/50 transition-all"
+                    variant={selectedTags.includes(tag) ? "default" : "outline"}
+                    className="px-3 py-1.5 hover:bg-gray-500/30 cursor-pointer hover:border-foreground/50 transition-all"
                     onClick={() => toggleTag(tag)}
                   >
                     {tag}
@@ -264,15 +295,28 @@ export default function ProjectsPage() {
                     </CardContent>
                     <CardFooter className="gap-2">
                       {project.github_url && (
-                        <Button asChild variant="outline" size="sm" className="gap-2">
-                          <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="gap-2"
+                        >
+                          <a
+                            href={project.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <Github size={16} /> GitHub
                           </a>
                         </Button>
                       )}
                       {project.demo_url && (
                         <Button asChild size="sm" className="gap-2">
-                          <a href={project.demo_url} target="_blank" rel="noopener noreferrer">
+                          <a
+                            href={project.demo_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <ExternalLink size={16} /> Demo
                           </a>
                         </Button>

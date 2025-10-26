@@ -1,11 +1,94 @@
-import { notFound } from 'next/navigation';
-import { Calendar, Clock, User, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { getBlogPostBySlug, getBlogPosts } from '@/lib/supabase';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { notFound } from "next/navigation";
+import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { format } from "date-fns";
+import { getBlogPostBySlug, getBlogPosts } from "@/lib/data";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+
+const parseMarkdown = (content: string) => {
+  // Split content into lines
+  const lines = content.split("\n");
+  let output = [];
+  let inCodeBlock = false;
+  let codeBlockContent = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Handle code blocks (```)
+    if (line.trim().startsWith("```")) {
+      if (!inCodeBlock) {
+        inCodeBlock = true;
+        codeBlockContent = [];
+      } else {
+        inCodeBlock = false;
+        output.push(`<pre><code>${codeBlockContent.join("\n")}</code></pre>`);
+      }
+      continue;
+    }
+
+    if (inCodeBlock) {
+      codeBlockContent.push(line);
+      continue;
+    }
+
+    // Process inline Markdown within the line
+    line = processInlineMarkdown(line);
+
+    // Handle block-level Markdown
+    if (line.startsWith("# ")) {
+      output.push(`<h1>${line.substring(2)}</h1>`);
+    } else if (line.startsWith("## ")) {
+      output.push(`<h2>${line.substring(3)}</h2>`);
+    } else if (line.startsWith("### ")) {
+      output.push(`<h3>${line.substring(4)}</h3>`);
+    } else if (line.startsWith("- ") || line.startsWith("* ")) {
+      // Handle lists, wrapping in <ul> if needed
+      let listItems = [];
+      while (
+        i < lines.length &&
+        (lines[i].startsWith("- ") || lines[i].startsWith("* "))
+      ) {
+        listItems.push(
+          `<li>${processInlineMarkdown(lines[i].substring(2))}</li>`
+        );
+        i++;
+      }
+      i--; // Step back one line since the loop advances one extra
+      output.push(`<ul>${listItems.join("")}</ul>`);
+    } else if (line.startsWith("> ")) {
+      output.push(`<blockquote>${line.substring(2)}</blockquote>`);
+    } else if (line.trim() === "") {
+      output.push("<br/>");
+    } else {
+      output.push(`<p>${line}</p>`);
+    }
+  }
+
+  return output.join("");
+};
+
+// Helper function to process inline Markdown (bold, italic, inline code, links, images)
+const processInlineMarkdown = (text: string) => {
+  // Handle images: ![alt](url)
+  text = text.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
+
+  // Handle links: [text](url)
+  text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+  // Handle bold: **text** or __text__
+  text = text.replace(/(?:\*\*|__)(.*?)(?:\*\*|__)/g, "<strong>$1</strong>");
+
+  // Handle italic: *text* or _text_
+  text = text.replace(/(?:\*|_)(.*?)(?:\*|_)/g, "<em>$1</em>");
+
+  // Handle inline code: `text`
+  text = text.replace(/`(.*?)`/g, "<code>$1</code>");
+
+  return text;
+};
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -14,12 +97,16 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const post = await getBlogPostBySlug(params.slug);
 
   if (!post) {
     return {
-      title: 'Post Not Found',
+      title: "Post Not Found",
     };
   }
 
@@ -30,7 +117,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      type: 'article',
+      type: "article",
       publishedTime: post.published_at || undefined,
       authors: [post.author],
       tags: post.tags,
@@ -38,7 +125,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const post = await getBlogPostBySlug(params.slug);
 
   if (!post) {
@@ -73,7 +164,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {post.published_at && (
               <div className="flex items-center gap-2">
                 <Calendar size={16} />
-                <span>{format(new Date(post.published_at), 'MMMM dd, yyyy')}</span>
+                <span>
+                  {format(new Date(post.published_at), "MMMM dd, yyyy")}
+                </span>
               </div>
             )}
             <div className="flex items-center gap-2">
@@ -86,27 +179,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         <Card className="p-6 sm:p-8 prose prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-code:text-primary prose-code:before:content-none prose-code:after:content-none prose-img:rounded-lg">
           <div
             dangerouslySetInnerHTML={{
-              __html: post.content
-                .split('\n')
-                .map((line) => {
-                  if (line.startsWith('# ')) {
-                    return `<h1>${line.substring(2)}</h1>`;
-                  }
-                  if (line.startsWith('## ')) {
-                    return `<h2>${line.substring(3)}</h2>`;
-                  }
-                  if (line.startsWith('### ')) {
-                    return `<h3>${line.substring(4)}</h3>`;
-                  }
-                  if (line.startsWith('- ')) {
-                    return `<li>${line.substring(2)}</li>`;
-                  }
-                  if (line.trim() === '') {
-                    return '<br/>';
-                  }
-                  return `<p>${line}</p>`;
-                })
-                .join('\n'),
+              __html: parseMarkdown(post.content),
             }}
           />
         </Card>

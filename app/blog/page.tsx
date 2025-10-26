@@ -1,14 +1,21 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowRight, Tag } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { getBlogPosts, type BlogPost } from '@/lib/supabase';
-import { format } from 'date-fns';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Calendar, Clock, ArrowRight, Tag } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { getBlogPosts, type BlogPost } from "@/lib/data";
+import { format } from "date-fns";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -40,7 +47,7 @@ export default function BlogPage() {
         const data = await getBlogPosts();
         setPosts(data);
       } catch (error) {
-        console.error('Error loading blog posts:', error);
+        console.error("Error loading blog posts:", error);
       } finally {
         setLoading(false);
       }
@@ -83,8 +90,9 @@ export default function BlogPage() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">Blog</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Thoughts, tutorials, and insights about software development, technology, and my journey
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto ">
+            Thoughts, tutorials, and insights about software development,
+            technology, and my journey
           </p>
         </motion.div>
 
@@ -101,7 +109,7 @@ export default function BlogPage() {
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge
-                variant={selectedTag === null ? 'default' : 'outline'}
+                variant={selectedTag === null ? "default" : "outline"}
                 className="cursor-pointer hover:border-foreground/50 transition-all"
                 onClick={() => setSelectedTag(null)}
               >
@@ -110,8 +118,8 @@ export default function BlogPage() {
               {allTags.map((tag) => (
                 <Badge
                   key={tag}
-                  variant={selectedTag === tag ? 'default' : 'outline'}
-                  className="cursor-pointer hover:border-foreground/50 transition-all"
+                  variant={selectedTag === tag ? "default" : "outline"}
+                  className="px-3 py-1.5 cursor-pointer hover:border-foreground/50 transition-all hover:bg-gray-500/30"
                   onClick={() => setSelectedTag(tag)}
                 >
                   {tag}
@@ -147,8 +155,11 @@ export default function BlogPage() {
                         <Calendar size={14} />
                         <span>
                           {post.published_at
-                            ? format(new Date(post.published_at), 'MMM dd, yyyy')
-                            : 'Draft'}
+                            ? format(
+                                new Date(post.published_at),
+                                "MMM dd, yyyy"
+                              )
+                            : "Draft"}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -156,10 +167,10 @@ export default function BlogPage() {
                         <span>{post.reading_time} min read</span>
                       </div>
                     </div>
-                    <CardTitle className="group-hover:text-primary transition-colors">
+                    <CardTitle className="group-hover:text-primary transition-colors text-xl leading-tight">
                       {post.title}
                     </CardTitle>
-                    <CardDescription className="line-clamp-2">
+                    <CardDescription className="line-clamp-2 pt-2 leading-tight">
                       {post.excerpt}
                     </CardDescription>
                   </CardHeader>
@@ -173,7 +184,11 @@ export default function BlogPage() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button asChild variant="ghost" className="w-full gap-2 group-hover:gap-3 transition-all">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      className="w-full gap-2 group-hover:gap-3 transition-all"
+                    >
                       <Link href={`/blog/${post.slug}`}>
                         Read More <ArrowRight size={16} />
                       </Link>

@@ -1,24 +1,55 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ArrowRight, Github, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { getFeaturedProjects, type Project } from '@/lib/supabase';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { ArrowRight, Github, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getFeaturedProjects, type Project } from "@/lib/data";
 
 const skills = [
-  { name: 'C++', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg' },
-  { name: 'Java', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg' },
-  { name: 'JavaScript', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg' },
-  { name: 'TypeScript', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg' },
-  { name: 'Python', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg' },
-  { name: 'React', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg' },
-  { name: 'Node.js', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg' },
-  { name: 'MongoDB', icon: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg' },
+  {
+    name: "C++",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg",
+  },
+  {
+    name: "Java",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg",
+  },
+  {
+    name: "JavaScript",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg",
+  },
+  {
+    name: "TypeScript",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg",
+  },
+  {
+    name: "Python",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg",
+  },
+  {
+    name: "React",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg",
+  },
+  {
+    name: "Node.js",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg",
+  },
+  {
+    name: "MongoDB",
+    icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg",
+  },
 ];
 
 const containerVariants = {
@@ -50,7 +81,7 @@ export default function Home() {
         const data = await getFeaturedProjects();
         setProjects(data.slice(0, 3));
       } catch (error) {
-        console.error('Error loading projects:', error);
+        console.error("Error loading projects:", error);
       } finally {
         setLoading(false);
       }
@@ -68,9 +99,9 @@ export default function Home() {
           className="max-w-4xl mx-auto text-center"
         >
           <motion.div
-            initial={{ scale: 0 }}
+            initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="mb-8"
           >
             <Image
@@ -112,12 +143,28 @@ export default function Home() {
             <code className="bg-green-700">Spring Boot</code>) with a passion for{' '}
             <code>DevOps</code> and <code>ML</code>. I obsess over details to craft innovative,
             high-impact software from concept to delivery. */}
-            Full-Stack Developer (<code className="bg-blue-900/30 px-2 py-1 rounded text-blue-400">MERN</code>,{' '}
-            <code className="bg-yellow-900/30 px-2 py-1 rounded text-yellow-400">Python</code>,{' '}
-            <code className="bg-green-900/30 px-2 py-1 rounded text-green-400">Spring Boot</code>) 
-            with a passion for <code className="bg-purple-900/30 px-2 py-1 rounded text-purple-400">DevOps</code> and{' '}
-            <code className="bg-pink-900/30 px-2 py-1 rounded text-pink-400">ML</code>. 
-            I obsess over details to craft innovative, high-impact software from concept to delivery.
+            Full-Stack Developer (
+            <code className="bg-blue-900/30 px-2 py-1 rounded text-blue-400">
+              MERN
+            </code>
+            ,{" "}
+            <code className="bg-yellow-900/30 px-2 py-1 rounded text-yellow-400">
+              Python
+            </code>
+            ,{" "}
+            <code className="bg-green-900/30 px-2 py-1 rounded text-green-400">
+              Spring Boot
+            </code>
+            ) with a passion for
+            <code className="bg-purple-900/30 px-2 py-1 rounded text-purple-400">
+              DevOps
+            </code>{" "}
+            and{" "}
+            <code className="bg-pink-900/30 px-2 py-1 rounded text-pink-400">
+              ML
+            </code>
+            . I obsess over details to craft innovative, high-impact software
+            from concept to delivery.
           </motion.p>
 
           <motion.div
@@ -147,7 +194,9 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Skills & Technologies</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Skills & Technologies
+            </h2>
             <p className="text-muted-foreground">
               Technologies I work with to build amazing applications
             </p>
@@ -167,7 +216,12 @@ export default function Home() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card hover:border-foreground/20 transition-all"
               >
-                <Image src={skill.icon} alt={skill.name} width={24} height={24} />
+                <Image
+                  src={skill.icon}
+                  alt={skill.name}
+                  width={24}
+                  height={24}
+                />
                 <span className="font-medium">{skill.name}</span>
               </motion.div>
             ))}
@@ -198,7 +252,9 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Featured Projects</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Featured Projects
+            </h2>
             <p className="text-muted-foreground">
               Check out some of my recent work
             </p>
@@ -246,15 +302,28 @@ export default function Home() {
                     </CardContent>
                     <CardFooter className="gap-2">
                       {project.github_url && (
-                        <Button asChild variant="outline" size="sm" className="gap-2">
-                          <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="gap-2"
+                        >
+                          <a
+                            href={project.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <Github size={16} /> GitHub
                           </a>
                         </Button>
                       )}
                       {project.demo_url && (
                         <Button asChild size="sm" className="gap-2">
-                          <a href={project.demo_url} target="_blank" rel="noopener noreferrer">
+                          <a
+                            href={project.demo_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <ExternalLink size={16} /> Demo
                           </a>
                         </Button>
