@@ -186,7 +186,7 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                I'm a Software Engineer at ISS-Stoxx with a strong foundation in
+                I&apos;m a Software Engineer at ISS-Stoxx with a strong foundation in
                 full-stack development. My journey in tech has been driven by
                 curiosity and a passion for solving complex problems with
                 elegant solutions.
@@ -198,8 +198,8 @@ export default function AboutPage() {
                 that scale.
               </p>
               <p>
-                Beyond technical skills, I've held leadership positions
-                including Finance Secretary at Students' Council and Training
+                Beyond technical skills, I&apos;ve held leadership positions
+                including Finance Secretary at Students&apos; Council and Training
                 and Placement Coordinator, managing budgets and organizing
                 events that impacted thousands of students.
               </p>

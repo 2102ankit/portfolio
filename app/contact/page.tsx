@@ -142,7 +142,7 @@ export default function ContactPage() {
               <CardHeader>
                 <CardTitle>Send Me a Message</CardTitle>
                 <CardDescription>
-                  Fill out the form below and I'll get back to you as soon as
+                  Fill out the form below and I&apos;ll get back to you as soon as
                   possible
                 </CardDescription>
               </CardHeader>
